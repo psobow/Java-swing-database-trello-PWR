@@ -49,6 +49,7 @@ public class ButtonFrame extends JFrame {
             backgroundColor = color;
         }
 
+        @Override
         public void actionPerformed(ActionEvent event){
             buttonPanel.setBackground(backgroundColor);
         }

@@ -1,2 +1,4 @@
 rootProject.name = 'PWR-JAVA'
+include 'swing'
+include 'task2'
 
