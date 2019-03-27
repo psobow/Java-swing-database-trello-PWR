@@ -1,6 +1,7 @@
 package com.pwr.demo.client;
 
 import com.pwr.demo.dto.TrelloBoardDto;
+import com.pwr.demo.dto.TrelloCardDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,17 @@ public class TrelloClientTest {
 
     @Test
     public void shouldPrintBoards(){
-        List<TrelloBoardDto> trelloBoards = trelloClient.getTrelloBoards();
+        List<TrelloBoardDto> trelloBoards = trelloClient.getTrelloBoardsWithLists();
 
         trelloBoards.stream()
+                .forEach(System.out::println);
+    }
+
+    @Test
+    public void fetchTrelloCardsInsideListTest(){
+        List<TrelloCardDto> trelloCards = trelloClient.fetchTrelloCardsInsideList("5bb868dc4706d96baf64be3b");
+
+        trelloCards.stream()
                 .forEach(System.out::println);
     }
 }

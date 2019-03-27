@@ -20,15 +20,16 @@ public class TrelloBoardDto {
 
     @Override
     public String toString(){
-        return "Board name: " + name + " ID: " + id +"\n"
+        return "Board name: " + name + ", Board ID: " + id +"\n"
                 +"      lists inside:\n" + getEveryListToString();
     }
 
     private String getEveryListToString(){
-
         String everyList = "";
-        for (TrelloListDto list : this.lists) {
-            everyList += "           " + list.toString() + "\n";
+        if(lists != null) {
+            for (TrelloListDto list : this.lists) {
+                everyList += "           " + list.toString() + "\n";
+            }
         }
         return everyList;
     }
