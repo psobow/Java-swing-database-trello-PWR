@@ -18,16 +18,15 @@ public class TrelloClientTest {
 
     @Test
     public void shouldPrintBoards(){
-        List<TrelloBoardDto> trelloBoards = trelloClient.getTrelloBoardsWithLists();
+        List<TrelloBoardDto> trelloBoards = trelloClient.getTrelloBoardsWithListsAndCards();
 
         trelloBoards.stream()
                 .forEach(System.out::println);
     }
 
     @Test
-    public void fetchTrelloCardsInsideListTest(){
-        List<TrelloCardDto> trelloCards = trelloClient.fetchTrelloCardsInsideList("5bb868dc4706d96baf64be3b");
-
+    public void shouldPrintCards(){
+        List<TrelloCardDto> trelloCards = trelloClient.getTrelloCardsInsideList("5bb868dc4706d96baf64be3b");
         trelloCards.stream()
                 .forEach(System.out::println);
     }

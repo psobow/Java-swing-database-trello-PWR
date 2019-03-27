@@ -5,7 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,11 +32,18 @@ public class TrelloListDto {
 
     private String getEveryCardToString(){
         String everyCard = "";
+        //Optional.ofNullable(cards).orElse(new ArrayList<>()).stream(); // What to do with it?
         if(cards != null) {
             for (TrelloCardDto card : this.cards) {
                 everyCard += "                  " + card.toString() + "\n";
             }
         }
         return everyCard;
+    }
+
+    private String getEveryCardToStringVersion2(){
+        return Optional.ofNullable(cards).orElse(new ArrayList<>()).stream()
+                .map(card -> card.toString())
+                .collect(Collectors.joining("\n                  "));
     }
 }
