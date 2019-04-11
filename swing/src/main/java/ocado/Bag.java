@@ -14,9 +14,6 @@ public class Bag {
         setBagStrengthInGrams(DEFAULT_BAG_STRENGTH_IN_GRAMS);
     }
 
-    public Bag(final double bagStrengthInGrams) {
-        setBagStrengthInGrams(bagStrengthInGrams);
-    }
 
     public double getBagStrengthInGrams() {
         return bagStrengthInGrams;

@@ -6,7 +6,8 @@ public class AlgorithmAPI {
 
     private List<Product> products = new ArrayList<>();
     private List<Bag> bags = new ArrayList<>();
-
+    private Bag bag = new Bag();
+    private double bagStrength = bag.getBagStrengthInGrams();
 
     public void fetchData(){
         // read data from .csv
@@ -20,7 +21,7 @@ public class AlgorithmAPI {
     public void packProductsIntoBags(List<Long> productsID){
         if (products == null || products.size() == 0) throw new RuntimeException("Unable to pack products. Fetch data first!");
 
-        int expectedBagsQuantity = (int) Math.ceil(getProductsWeightInGrams(productsID) / 3000);
+        int expectedBagsQuantity = (int) Math.ceil(getProductsWeightInGrams(productsID) / bagStrength);
 
         prepareBags(expectedBagsQuantity);
 
