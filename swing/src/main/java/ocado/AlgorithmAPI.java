@@ -12,18 +12,16 @@ public class AlgorithmAPI {
     public void fetchData(){
         // read data from .csv
 
-        products.add(new Product(1, "Carrot",20,"GR"));
-        products.add(new Product(2, "Chicken",500,"GR"));
-        products.add(new Product(3, "Pepsi 2.5L",2.5,"KG"));
+        products.add(new Product(1, "Carrot",2000,"GR"));
+        products.add(new Product(2, "Chicken",2000,"GR"));
+        products.add(new Product(3, "Pepsi 2.5L",2,"KG"));
     }
 
 
     public void packProductsIntoBags(List<Long> productsID){
         if (products == null || products.size() == 0) throw new RuntimeException("Unable to pack products. Fetch data first!");
 
-        int expectedBagsQuantity = (int) Math.ceil(getProductsWeightInGrams(productsID) / bagStrength);
-
-        prepareBags(expectedBagsQuantity);
+        bags.add(new Bag());
 
         Optional.ofNullable(productsID)
                 .orElseThrow(IllegalArgumentException::new)
@@ -34,14 +32,17 @@ public class AlgorithmAPI {
                             .findAny()
                             .orElseThrow(() -> new RuntimeException("Product with ID = " + ID + " not found inside product list."));
 
-                    for(Bag currentBag : bags){
-                        if (currentBag.getBagStrengthInGrams() >=
-                                currentBag.getWeightOfProductsInside() + currentProduct.getWeightInGrams()){
+                    for(int i = 0; i < bags.size(); i++){
+                        if (bags.get(i).getBagStrengthInGrams() >=
+                                bags.get(i).getWeightOfProductsInside() + currentProduct.getWeightInGrams()){
 
-                            currentBag.addNewProduct(currentProduct);
+                            bags.get(i).addNewProduct(currentProduct);
                             break;
+                        } else {
+                            bags.add(new Bag());
                         }
                     }
+
                 });
     }
 
