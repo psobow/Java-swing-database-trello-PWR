@@ -26,6 +26,10 @@ public class TrelloListDto {
                 + "                Cards inside:\n" + getEveryCardToString();
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setCards(List<TrelloCardDto> newCards){
         cards = newCards;
     }

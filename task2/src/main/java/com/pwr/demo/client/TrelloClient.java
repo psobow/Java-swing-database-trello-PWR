@@ -3,6 +3,7 @@ package com.pwr.demo.client;
 import com.pwr.demo.config.TrelloConfig;
 import com.pwr.demo.dto.TrelloBoardDto;
 import com.pwr.demo.dto.TrelloCardDto;
+import com.pwr.demo.dto.TrelloListDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -11,10 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -22,6 +20,58 @@ import java.util.Optional;
 public class TrelloClient {
     private final TrelloConfig trelloConfig;
     private final RestTemplate restTemplate;
+
+    public void putTrelloBoardName(TrelloBoardDto boardDto, String newName){
+        URI url = UriComponentsBuilder
+                .fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/boards/" + boardDto.getId())
+                .queryParam("key",     trelloConfig.getTrelloAppKey())
+                .queryParam("token",   trelloConfig.getTrelloToken())
+                .queryParam("name", newName)
+                .build().encode().toUri();
+
+        boardDto.setName(newName);
+
+        try {
+            restTemplate.put(url, boardDto);
+        } catch (RestClientException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    public void putTrelloListName(TrelloListDto listDto, String newName){
+        URI url = UriComponentsBuilder
+                .fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/lists/" + listDto.getId())
+                .queryParam("key",     trelloConfig.getTrelloAppKey())
+                .queryParam("token",   trelloConfig.getTrelloToken())
+                .queryParam("name", newName)
+                .build().encode().toUri();
+
+        listDto.setName(newName);
+
+        try {
+            restTemplate.put(url, listDto);
+        } catch (RestClientException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    public void putTrelloCardName(TrelloCardDto cardDto, String newName){
+        URI url = UriComponentsBuilder
+                .fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/cards/" + cardDto.getId())
+                .queryParam("key",     trelloConfig.getTrelloAppKey())
+                .queryParam("token",   trelloConfig.getTrelloToken())
+                .queryParam("name", newName)
+                .build().encode().toUri();
+
+        cardDto.setName(newName);
+
+        try {
+            restTemplate.put(url, cardDto);
+        } catch (RestClientException e) {
+            log.error(e.getMessage(), e);
+        }
+
+    }
 
     public List<TrelloBoardDto> getTrelloBoardsWithListsAndCards() {
         URI url = UriComponentsBuilder

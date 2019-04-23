@@ -42,7 +42,6 @@ public class AlgorithmAPI {
                             bags.add(new Bag());
                         }
                     }
-
                 });
     }
 

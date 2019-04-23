@@ -14,6 +14,10 @@ public class TrelloCardDto {
     private String idList;
     private String name;
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString(){
         return "Card name: " + name + ", Card ID: " + id + ", List ID: " + idList;

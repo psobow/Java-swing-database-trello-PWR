@@ -18,6 +18,8 @@ public class TrelloBoardDto {
     private List<TrelloListDto> lists;
 
 
+
+
     @Override
     public String toString(){
         return "Board name: " + name + ", Board ID: " + id +"\n"
@@ -34,4 +36,7 @@ public class TrelloBoardDto {
         return everyList;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 }
