@@ -3,11 +3,13 @@ package com.pwr.demo;
 import com.pwr.demo.client.TrelloClient;
 import com.pwr.demo.dto.TrelloBoardDto;
 import com.pwr.demo.dto.TrelloCardDto;
+import com.pwr.demo.dto.TrelloListDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -18,170 +20,316 @@ public class MainFrame extends JFrame {
 
     List<TrelloBoardDto> trelloBoards;
 
-    private final int WIDTH = 800;
-    private final int HEIGHT = 300;
+    JPanel panel = new JPanel();
+
+    SpringLayout layout = new SpringLayout();
+
+    private final int WIDTH = 1200;
+    private final int HEIGHT = 800;
+
+    List<JLabel> boardNameLabels = new ArrayList<>();
+    List<JLabel> boardIdLabels = new ArrayList<>();
+
+    List<JLabel> listNameLabels = new ArrayList<>();
+    List<JLabel> listIdLabels = new ArrayList<>();
+
+    List<JLabel> cardNameLabels = new ArrayList<>();
+
+
+    List<JTextField> boardNameText = new ArrayList<>();
+    List<JTextField> boardIdText = new ArrayList<>();
+
+    List<JTextField> listNameText = new ArrayList<>();
+    List<JTextField> listIdText = new ArrayList<>();
+
+    List<JTextField> cardNameText = new ArrayList<>();
+
+    private void pushToTrello(List<TrelloBoardDto> trelloBoardDtos) {
+        int quantityOfLists = 0;
+        int quantityOfCards = 0;
+
+        for(int boardIndex = 0; boardIndex < trelloBoardDtos.size(); boardIndex++){
+
+            trelloClient.putTrelloBoardName(trelloBoardDtos.get(boardIndex), boardNameText.get(boardIndex).getText());
+
+
+
+            for(int listIndex = 0; listIndex < trelloBoardDtos.get(boardIndex).getLists().size(); listIndex++ ){
+                trelloClient.putTrelloListName(trelloBoardDtos.get(boardIndex).getLists().get(listIndex),listNameText.get(quantityOfLists).getText());
+                quantityOfLists++;
+
+                for(int cardIndex = 0; cardIndex < trelloBoardDtos.get(boardIndex).getLists().get(listIndex).getCards().size(); cardIndex++){
+                    trelloClient.putTrelloCardName(trelloBoardDtos.get(boardIndex).getLists().get(listIndex).getCards().get(cardIndex),cardNameText.get(quantityOfCards).getText());
+                    quantityOfCards++;
+                }
+            }
+        }
+    }
+
+    private void fillGUIComponents(List<TrelloBoardDto> trelloBoardDtos){
+
+        int quantityOfLists = 0;
+        int quantityOfCards = 0;
+
+        for(int boardIndex = 0; boardIndex < trelloBoardDtos.size(); boardIndex++){
+            boardIdText.get(boardIndex).setText(trelloBoardDtos.get(boardIndex).getId());
+            boardNameText.get(boardIndex).setText(trelloBoardDtos.get(boardIndex).getName());
+
+
+
+            for(int listIndex = 0; listIndex < trelloBoardDtos.get(boardIndex).getLists().size(); listIndex++ ){
+                listIdText.get(quantityOfLists).setText(trelloBoardDtos.get(boardIndex).getLists().get(listIndex).getId());
+                listNameText.get(quantityOfLists).setText(trelloBoardDtos.get(boardIndex).getLists().get(listIndex).getName());
+                quantityOfLists++;
+
+                for(int cardIndex = 0; cardIndex < trelloBoardDtos.get(boardIndex).getLists().get(listIndex).getCards().size(); cardIndex++){
+                    cardNameText.get(quantityOfCards).setText(trelloBoardDtos.get(boardIndex).getLists().get(listIndex).getCards().get(cardIndex).getName());
+                    quantityOfCards++;
+                }
+            }
+        }
+    }
+
+
+    private void generateGUI(List<TrelloBoardDto> trelloBoardDtos){
+
+        boardNameLabels = new ArrayList<>();
+        boardIdLabels = new ArrayList<>();
+
+        listNameLabels = new ArrayList<>();
+        listIdLabels = new ArrayList<>();
+
+        cardNameLabels = new ArrayList<>();
+
+
+        boardNameText = new ArrayList<>();
+        boardIdText = new ArrayList<>();
+
+        listNameText = new ArrayList<>();
+        listIdText = new ArrayList<>();
+
+        cardNameText = new ArrayList<>();
+
+
+        for (TrelloBoardDto boardDto : trelloBoardDtos) {
+            boardNameLabels.add(new JLabel("Board name: "));
+            boardIdLabels.add(new JLabel("Board ID: "));
+
+            boardNameText.add(new JTextField("Text field", 15));
+            boardIdText.add(new JTextField("Text field", 15));
+
+            for(TrelloListDto listDto : boardDto.getLists()){
+                listNameLabels.add(new JLabel("List name: "));
+                listIdLabels.add(new JLabel("List ID: "));
+
+                listNameText.add(new JTextField("Text field", 15));
+                listIdText.add(new JTextField("Text field", 15));
+
+
+                for(TrelloCardDto cardDto : listDto.getCards()){
+                    cardNameLabels.add(new JLabel("Card name: "));
+                    cardNameText.add(new JTextField("Text field",15));
+                }
+
+            }
+
+        }
+
+        int gapBetweenBoardNameAndNorth = 5;
+        int gapBetweenBoardNameAndWest = 5;
+
+        int gapBetweenComponentsNorthSouth = 5;
+        int gapBetweenComponentsWestEast = 5;
+
+        int gapListNameAndWest = 50;
+
+        int gapCardNameAndWest = 100;
+
+        JComponent upperComponent = null; // always set upperComponent to previous textField
+
+        int quantityOfLists = 0;
+
+        int quantityOfCards = 0;
+
+        for (int i = 0; i < trelloBoardDtos.size(); i++) {
+
+            if (i == 0){
+                layout.putConstraint(SpringLayout.WEST, boardNameLabels.get(0), gapBetweenBoardNameAndWest, SpringLayout.WEST, panel);
+                layout.putConstraint(SpringLayout.NORTH, boardNameLabels.get(0), gapBetweenBoardNameAndNorth, SpringLayout.NORTH, panel);
+
+                layout.putConstraint(SpringLayout.WEST, boardNameText.get(0), gapBetweenComponentsWestEast, SpringLayout.EAST, boardNameLabels.get(0));
+                layout.putConstraint(SpringLayout.NORTH, boardNameText.get(0), gapBetweenBoardNameAndNorth, SpringLayout.NORTH, panel);
+
+                layout.putConstraint(SpringLayout.WEST, boardIdLabels.get(0), gapBetweenComponentsWestEast, SpringLayout.EAST, boardNameText.get(0));
+                layout.putConstraint(SpringLayout.NORTH, boardIdLabels.get(0), gapBetweenBoardNameAndNorth, SpringLayout.NORTH, panel);
+
+                layout.putConstraint(SpringLayout.WEST, boardIdText.get(0), gapBetweenComponentsWestEast, SpringLayout.EAST, boardIdLabels.get(0));
+                layout.putConstraint(SpringLayout.NORTH, boardIdText.get(0), gapBetweenBoardNameAndNorth, SpringLayout.NORTH, panel);
+
+            } else {
+                layout.putConstraint(SpringLayout.WEST, boardNameLabels.get(i), gapBetweenBoardNameAndWest, SpringLayout.WEST, panel);
+                layout.putConstraint(SpringLayout.NORTH, boardNameLabels.get(i), gapBetweenComponentsNorthSouth, SpringLayout.SOUTH, upperComponent);
+
+
+                layout.putConstraint(SpringLayout.WEST, boardNameText.get(i), gapBetweenComponentsWestEast, SpringLayout.EAST, boardNameLabels.get(i));
+                layout.putConstraint(SpringLayout.NORTH, boardNameText.get(i), gapBetweenComponentsNorthSouth, SpringLayout.SOUTH, upperComponent);
+
+
+                layout.putConstraint(SpringLayout.WEST, boardIdLabels.get(i), gapBetweenComponentsWestEast, SpringLayout.EAST, boardNameText.get(i));
+                layout.putConstraint(SpringLayout.NORTH, boardIdLabels.get(i), gapBetweenComponentsNorthSouth, SpringLayout.SOUTH, upperComponent);
+
+                layout.putConstraint(SpringLayout.WEST, boardIdText.get(i), gapBetweenComponentsWestEast, SpringLayout.EAST, boardIdLabels.get(i));
+                layout.putConstraint(SpringLayout.NORTH, boardIdText.get(i), gapBetweenComponentsNorthSouth, SpringLayout.SOUTH, upperComponent);
+
+            }
+
+            boardIdText.get(i).setEditable(false);
+
+
+            panel.add(boardNameLabels.get(i));
+            panel.add(boardNameText.get(i));
+            panel.add(boardIdLabels.get(i));
+            panel.add(boardIdText.get(i));
+
+
+            upperComponent = boardIdText.get(i);
+
+
+            /*
+            W tej pętli zaczynam od listy na której poprzednio skończyilśmy. Dlatego j = quantityOfLists a nie j = 0. ponieważ w tedy za każdym razem odwoływalibyśmy się do tych samych list.
+             */
+            int listsIndex = 0;
+
+            for( int j = quantityOfLists ; j < trelloBoardDtos.get(i).getLists().size() + quantityOfLists ; j++){
+
+                layout.putConstraint(SpringLayout.WEST, listNameLabels.get(j), gapListNameAndWest, SpringLayout.WEST, panel);
+                layout.putConstraint(SpringLayout.NORTH, listNameLabels.get(j), gapBetweenComponentsNorthSouth, SpringLayout.SOUTH, upperComponent);
+
+                layout.putConstraint(SpringLayout.WEST, listNameText.get(j), gapBetweenComponentsWestEast, SpringLayout.EAST, listNameLabels.get(j) );
+                layout.putConstraint(SpringLayout.NORTH, listNameText.get(j), gapBetweenComponentsNorthSouth, SpringLayout.SOUTH, upperComponent);
+
+                layout.putConstraint(SpringLayout.WEST, listIdLabels.get(j), gapBetweenComponentsWestEast, SpringLayout.EAST, listNameText.get(j));
+                layout.putConstraint(SpringLayout.NORTH, listIdLabels.get(j), gapBetweenComponentsNorthSouth, SpringLayout.SOUTH, upperComponent);
+
+                layout.putConstraint(SpringLayout.WEST, listIdText.get(j), gapBetweenComponentsWestEast, SpringLayout.EAST, listIdLabels.get(j));
+                layout.putConstraint(SpringLayout.NORTH, listIdText.get(j), gapBetweenComponentsWestEast, SpringLayout.SOUTH, upperComponent);
+
+
+                listIdText.get(j).setEditable(false);
+                panel.add(listNameLabels.get(j));
+                panel.add(listNameText.get(j));
+                panel.add(listIdLabels.get(j));
+                panel.add(listIdText.get(j));
+
+                upperComponent = listIdText.get(j);
+
+
+
+                for( int k = quantityOfCards; k < trelloBoardDtos.get(i).getLists().get(listsIndex).getCards().size() + quantityOfCards; k++){
+                    layout.putConstraint(SpringLayout.WEST, cardNameLabels.get(k), gapCardNameAndWest, SpringLayout.WEST, panel);
+                    layout.putConstraint(SpringLayout.NORTH, cardNameLabels.get(k), gapBetweenComponentsNorthSouth, SpringLayout.SOUTH, upperComponent);
+
+                    layout.putConstraint(SpringLayout.WEST, cardNameText.get(k), gapBetweenComponentsWestEast, SpringLayout.EAST, cardNameLabels.get(k));
+                    layout.putConstraint(SpringLayout.NORTH, cardNameText.get(k), gapBetweenComponentsNorthSouth, SpringLayout.SOUTH, upperComponent);
+
+                    panel.add(cardNameLabels.get(k));
+                    panel.add(cardNameText.get(k));
+
+                    upperComponent = cardNameText.get(k);
+                }
+
+                quantityOfCards += trelloBoardDtos.get(i).getLists().get(listsIndex).getCards().size();
+
+                listsIndex++;
+            }
+            quantityOfLists += trelloBoardDtos.get(i).getLists().size();
+
+        }
+    }
+
+    public static JTextField trelloKeyText = new JTextField("", 15);
+    public static JTextField trelloTokenText = new JTextField("", 15);
 
     public MainFrame(){
         super("Hello World!");
+
+        JLabel trelloKeyLabel = new JLabel("Trello key:");
+        JLabel trelloTokenLabel = new JLabel("Trello token:");
+
+
+        JButton buttonFetchFromTrello = new JButton("Fetch data from trello");
+        JButton buttonPushToTrello = new JButton("Push data to trello");
+
+        JButton buttonFetchFromDB = new JButton("Fetch data from DB");
+        JButton buttonPushToDB = new JButton("Push data to DB");
+
+        panel.add(trelloKeyLabel);
+        panel.add(trelloTokenLabel);
+
+        panel.add(trelloKeyText);
+        panel.add(trelloTokenText);
+
+        panel.add(buttonFetchFromTrello);
+        panel.add(buttonPushToTrello);
+
+        panel.add(buttonFetchFromDB);
+        panel.add(buttonPushToDB);
+
+
         JFrame.setDefaultLookAndFeelDecorated(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Define the panel to hold the components
-        JPanel panel = new JPanel();
-        SpringLayout layout = new SpringLayout();
-
-        JLabel label = new JLabel("Board name: ");
-        JLabel label2 = new JLabel("Board ID: ");
-
-        JLabel label3 = new JLabel("List name: ");
-        JLabel label4 = new JLabel("List ID: ");
-
-        JLabel label5 = new JLabel("Card name: ");
-        JLabel label6 = new JLabel("Card name: ");
-        JLabel label7 = new JLabel("Card name: ");
-
-
-        JTextField text = new JTextField("Text field", 15);
-        JTextField text2 = new JTextField("Text field", 15);
-        JTextField text3 = new JTextField("Text field", 15);
-        JTextField text4 = new JTextField("Text field", 15);
-        JTextField text5 = new JTextField("Text field", 20);
-        JTextField text6 = new JTextField("Text field", 20);
-        JTextField text7 = new JTextField("Text field", 20);
-
-        JButton button1 = new JButton("Fetch data from trello");
-        JButton button2 = new JButton("Push data to trello");
-
-        button1.addActionListener(event -> {
-            trelloBoards = trelloClient.getTrelloBoardsWithListsAndCards();
-            text.setText(trelloBoards.get(0).getName());
-            text2.setText(trelloBoards.get(0).getId());
-            text2.setEditable(false);
-
-            text3.setText(trelloBoards.get(0).getLists().get(0).getName());
-            text4.setText(trelloBoards.get(0).getLists().get(0).getId());
-            text4.setEditable(false);
-
-            text5.setText(trelloBoards.get(0).getLists().get(0).getCards().get(0).getName());
-            text6.setText(trelloBoards.get(0).getLists().get(0).getCards().get(1).getName());
-            text7.setText(trelloBoards.get(0).getLists().get(0).getCards().get(2).getName());
-        });
-
-        button2.addActionListener(event -> {
-            trelloClient.putTrelloBoardName(trelloBoards.get(0),text.getText());
-
-            trelloClient.putTrelloListName(trelloBoards.get(0).getLists().get(0), text3.getText());
-            List<TrelloCardDto> cards = trelloBoards.get(0).getLists().get(0).getCards();
-
-            trelloClient.putTrelloCardName(cards.get(0), text5.getText());
-            trelloClient.putTrelloCardName(cards.get(1), text6.getText());
-            trelloClient.putTrelloCardName(cards.get(2), text7.getText());
-        });
-
-        panel.setSize(WIDTH, HEIGHT);
         panel.setLayout(layout);
-        panel.add(label);
-        panel.add(text);
-        panel.add(label2);
-        panel.add(text2);
-
-        panel.add(label3);
-        panel.add(text3);
-
-        panel.add(label4);
-        panel.add(text4);
-
-        panel.add(label5);
-        panel.add(text5);
-
-        panel.add(label6);
-        panel.add(text6);
-
-        panel.add(label7);
-        panel.add(text7);
-
-
-        panel.add(button1);
-        panel.add(button2);
-
-        // Put constraint on components
-
-        // Board name
-        layout.putConstraint(SpringLayout.WEST, label, 5, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.NORTH, label, 5, SpringLayout.NORTH, panel);
-
-        layout.putConstraint(SpringLayout.WEST, text, 5, SpringLayout.EAST, label);
-        layout.putConstraint(SpringLayout.NORTH, text, 5, SpringLayout.NORTH, panel);
-
-
-        // Board ID
-        layout.putConstraint(SpringLayout.WEST, label2, 5, SpringLayout.EAST, text);
-        layout.putConstraint(SpringLayout.NORTH, label2, 5, SpringLayout.NORTH, panel);
-
-        layout.putConstraint(SpringLayout.WEST, text2, 5, SpringLayout.EAST, label2);
-        layout.putConstraint(SpringLayout.NORTH, text2, 5, SpringLayout.NORTH, panel);
-
-
-
-        // List name
-        layout.putConstraint(SpringLayout.WEST, label3, 50, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.NORTH, label3, 5, SpringLayout.SOUTH, text);
-
-        layout.putConstraint(SpringLayout.WEST, text3, 5, SpringLayout.EAST, label3);
-        layout.putConstraint(SpringLayout.NORTH, text3, 5, SpringLayout.SOUTH, text2);
-
-
-
-        // List ID
-        layout.putConstraint(SpringLayout.WEST, label4, 5, SpringLayout.EAST, text3);
-        layout.putConstraint(SpringLayout.NORTH, label4, 5, SpringLayout.SOUTH, text2);
-
-        layout.putConstraint(SpringLayout.WEST, text4, 5, SpringLayout.EAST, label4);
-        layout.putConstraint(SpringLayout.NORTH, text4, 5, SpringLayout.SOUTH, text2);
-
-
-
-        // Cards
-        layout.putConstraint(SpringLayout.WEST, label5, 100, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.NORTH, label5, 5, SpringLayout.SOUTH, text4);
-
-        layout.putConstraint(SpringLayout.WEST, text5, 5, SpringLayout.EAST, label5);
-        layout.putConstraint(SpringLayout.NORTH, text5, 5, SpringLayout.SOUTH, text4);
-
-
-
-        layout.putConstraint(SpringLayout.WEST, label6, 100, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.NORTH, label6, 5, SpringLayout.SOUTH, text5);
-
-        layout.putConstraint(SpringLayout.WEST, text6, 5, SpringLayout.EAST, label6);
-        layout.putConstraint(SpringLayout.NORTH, text6, 5, SpringLayout.SOUTH, text5);
-
-
-        layout.putConstraint(SpringLayout.WEST, label7, 100, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.NORTH, label7, 5, SpringLayout.SOUTH, text6);
-
-        layout.putConstraint(SpringLayout.WEST, text7, 5, SpringLayout.EAST, label7);
-        layout.putConstraint(SpringLayout.NORTH, text7, 5, SpringLayout.SOUTH, text6);
-
-
-
-
-
-
-
-
-
-        layout.putConstraint(SpringLayout.WEST, button1, 5, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.SOUTH, button1, 0, SpringLayout.SOUTH, panel);
-
-        layout.putConstraint(SpringLayout.WEST, button2, 250, SpringLayout.WEST, panel);
-        layout.putConstraint(SpringLayout.SOUTH, button2, 0, SpringLayout.SOUTH, panel);
-
-
-
-        // Set the window to be visible as the default to be false
+        panel.setSize(2000,  2000);
         add(panel);
         setSize(WIDTH,HEIGHT);
+        //setPreferredSize(new Dimension(400, 400));
+        //pack();
+
+
+
+        layout.putConstraint(SpringLayout.WEST, buttonPushToTrello, 0, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.SOUTH, buttonPushToTrello, 0, SpringLayout.SOUTH, panel);
+
+        layout.putConstraint(SpringLayout.WEST, buttonFetchFromTrello, 0, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.SOUTH, buttonFetchFromTrello, -10, SpringLayout.NORTH, buttonPushToTrello);
+
+        layout.putConstraint(SpringLayout.EAST, buttonPushToDB, 0, SpringLayout.EAST, panel);
+        layout.putConstraint(SpringLayout.SOUTH, buttonPushToDB, 0, SpringLayout.SOUTH, panel);
+
+        layout.putConstraint(SpringLayout.EAST, buttonFetchFromDB, 0, SpringLayout.EAST, panel);
+        layout.putConstraint(SpringLayout.SOUTH, buttonFetchFromDB, -10, SpringLayout.NORTH, buttonPushToDB);
+
+
+        layout.putConstraint(SpringLayout.WEST, trelloKeyLabel, 300, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.SOUTH, trelloKeyLabel, -40, SpringLayout.SOUTH, panel);
+
+        layout.putConstraint(SpringLayout.WEST, trelloKeyText, 5, SpringLayout.EAST, trelloKeyLabel);
+        layout.putConstraint(SpringLayout.SOUTH, trelloKeyText, -40, SpringLayout.SOUTH, panel);
+
+        layout.putConstraint(SpringLayout.WEST, trelloTokenLabel, 300, SpringLayout.WEST, panel);
+        layout.putConstraint(SpringLayout.SOUTH, trelloTokenLabel, -15, SpringLayout.SOUTH, panel);
+
+        layout.putConstraint(SpringLayout.WEST, trelloTokenText, 5, SpringLayout.EAST, trelloTokenLabel);
+        layout.putConstraint(SpringLayout.SOUTH, trelloTokenText, -15, SpringLayout.SOUTH, panel);
+
+
+        buttonFetchFromTrello.addActionListener(event -> {
+            trelloBoards = trelloClient.getTrelloBoardsWithListsAndCards();
+            generateGUI(trelloBoards);
+            fillGUIComponents(trelloBoards);
+
+            panel.revalidate();
+            panel.repaint();
+        });
+
+        buttonPushToTrello.addActionListener(event -> {
+            if (trelloBoards != null){
+                pushToTrello(trelloBoards);
+            }
+        });
+
+
         setVisible(true);
     }
 }
