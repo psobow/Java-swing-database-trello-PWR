@@ -11,8 +11,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+// Przed testami trzeba zakomentować anotacje @Component w klasie MainFrame
+
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = DemoApplication.class)
 public class TrelloClientTest {
 
     @Autowired

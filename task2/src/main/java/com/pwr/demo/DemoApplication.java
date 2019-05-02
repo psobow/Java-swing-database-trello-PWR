@@ -20,16 +20,22 @@ public class DemoApplication {
 }
 */
 
+// umożliwić wprowadzenie credentiali do trello
+// baza danych lokalnie
+// dynamiczne gui
+// pokolei pobieranie danych żeby
+// binding jakiegoś pola
+
 
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
 public class DemoApplication {
 
-    public static void main(String[] args) {
-        ConfigurableApplicationContext context = new SpringApplicationBuilder(DemoApplication.class).headless(false).run(args);
-        MainFrame appFrame = context.getBean(MainFrame.class);
-    }
+  public static void main(String[] args) {
+    ConfigurableApplicationContext context = new SpringApplicationBuilder(DemoApplication.class).headless(false).run(args);
+    MainFrame appFrame = context.getBean(MainFrame.class);
+  }
 }
 
 

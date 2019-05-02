@@ -1,6 +1,5 @@
 package com.pwr.demo.client;
 
-import com.pwr.demo.MainFrame;
 import com.pwr.demo.config.TrelloConfig;
 import com.pwr.demo.dto.TrelloBoardDto;
 import com.pwr.demo.dto.TrelloCardDto;
@@ -22,7 +21,7 @@ public class TrelloClient {
   private final TrelloConfig trelloConfig;
   private final RestTemplate restTemplate;
 
-  public void putTrelloBoardName(TrelloBoardDto boardDto, String newName){
+  public void putTrelloBoardName(final TrelloBoardDto boardDto, final String newName){
     URI url = UriComponentsBuilder
         .fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/boards/" + boardDto.getId())
         .queryParam("key",     trelloConfig.getTrelloAppKey())//MainFrame.trelloKeyText.getText())
@@ -39,7 +38,7 @@ public class TrelloClient {
     }
   }
 
-  public void putTrelloListName(TrelloListDto listDto, String newName){
+  public void putTrelloListName(final TrelloListDto listDto, final String newName){
     URI url = UriComponentsBuilder
         .fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/lists/" + listDto.getId())
         .queryParam("key",     trelloConfig.getTrelloAppKey())//MainFrame.trelloKeyText.getText())
@@ -56,7 +55,7 @@ public class TrelloClient {
     }
   }
 
-  public void putTrelloCardName(TrelloCardDto cardDto, String newName){
+  public void putTrelloCardName(final TrelloCardDto cardDto, final String newName){
     URI url = UriComponentsBuilder
         .fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/cards/" + cardDto.getId())
         .queryParam("key",     trelloConfig.getTrelloAppKey())//MainFrame.trelloKeyText.getText())
@@ -86,10 +85,11 @@ public class TrelloClient {
     try {
       TrelloBoardDto[] boardsResponse = restTemplate.getForObject(url, TrelloBoardDto[].class);
 
-      Arrays.asList(Optional.ofNullable(boardsResponse).orElse(new TrelloBoardDto[0]))
-            .forEach(board ->
-                         Optional.ofNullable(board.getLists()).orElse(new ArrayList<>())
-                                 .forEach(list -> list.setCards(getTrelloCardsInsideList(list.getId())))
+      Arrays.asList(Optional.ofNullable(boardsResponse)
+                            .orElse(new TrelloBoardDto[0]))
+            .forEach(board -> Optional.ofNullable(board.getLists())
+                                      .orElse(new ArrayList<>())
+                                      .forEach(list -> list.setCards(getTrelloCardsInsideList(list.getId())))
             );
 
 
@@ -101,7 +101,7 @@ public class TrelloClient {
     }
   }
 
-  public List<TrelloCardDto> getTrelloCardsInsideList(String listId){
+  List<TrelloCardDto> getTrelloCardsInsideList(final String listId){
     URI url = UriComponentsBuilder
         .fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/lists/" + listId + "/cards")
         .queryParam("key", trelloConfig.getTrelloAppKey())//MainFrame.trelloKeyText.getText())
@@ -115,7 +115,7 @@ public class TrelloClient {
 
     } catch (RestClientException e) {
       log.error(e.getMessage(), e);
-      return new ArrayList<>();
+       return new ArrayList<>();
     }
 
   }
