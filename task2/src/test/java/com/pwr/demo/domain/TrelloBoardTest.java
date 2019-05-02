@@ -1,12 +1,9 @@
 package com.pwr.demo.domain;
 
-import static org.junit.Assert.*;
-
 import com.pwr.demo.DemoApplication;
 import com.pwr.demo.client.TrelloClient;
 import com.pwr.demo.domain.DAO.TrelloBoardDao;
 import com.pwr.demo.mapper.BoardMapper;
-import com.pwr.demo.mapper.ListMapper;
 import com.pwr.demo.service.DBservice;
 import java.util.List;
 import org.junit.Test;
@@ -26,17 +23,15 @@ public class TrelloBoardTest {
   BoardMapper boardMapper;
   @Autowired
   DBservice dBservice;
+  @Autowired
+  TrelloBoardDao boardDao;
 
   @Test
   public void testBoardSave(){
     // Given
-    List<TrelloBoard> boards = boardMapper.mapToListTrelloBoard(client.getTrelloBoardsWithListsAndCards());
+    List<TrelloBoard> boards = boardMapper.mapToDomain(client.getTrelloBoardsWithListsAndCards());
 
-    for (int i = 0; i < boards.size(); i++) {
-      for (int j = 0; j < boards.get(i).getLists().size(); j++){
 
-      }
-    }
 
     // When
     dBservice.saveAll(boards);
@@ -44,5 +39,10 @@ public class TrelloBoardTest {
     // Cleaning
 
     // Then
+  }
+
+  @Test
+  public void deleteBoards(){
+    boardDao.deleteAll();
   }
 }

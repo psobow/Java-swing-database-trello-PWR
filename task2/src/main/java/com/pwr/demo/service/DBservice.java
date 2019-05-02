@@ -29,6 +29,10 @@ public class DBservice {
     boardDao.saveAll(boards);
   }
 
+  public void deleteAll(){
+    boardDao.deleteAll();
+  }
+
   public List<TrelloBoard> findAll(){
     return boardDao.findAll();
   }

@@ -12,17 +12,19 @@ public class ListMapper {
   @Autowired
   CardMapper cardMapper;
 
-  public TrelloList mapToTrelloList(final TrelloListDto listDto){
-    return new TrelloList(listDto.getId(),
-                          listDto.getName(),
-                          cardMapper.mapToListTrelloCard(listDto.getCards()));
+  public List<TrelloList> mapToDomain(final List<TrelloListDto> listDtoList){
+    return listDtoList.stream()
+                      .map(listDto -> new TrelloList(listDto.getTrelloId(),
+                                                     listDto.getName(),
+                                                     cardMapper.mapToDomain(listDto.getCards())))
+                      .collect(Collectors.toList());
   }
 
-  public List<TrelloList> mapToListTrelloList(final List<TrelloListDto> listDtoList){
-    return listDtoList.stream()
-                      .map(listDto -> new TrelloList(listDto.getId(),
-                                                     listDto.getName(),
-                                                     cardMapper.mapToListTrelloCard(listDto.getCards())))
-                      .collect(Collectors.toList());
+  public List<TrelloListDto> mapToDto(final List<TrelloList> lists){
+    return lists.stream()
+                .map(list -> new TrelloListDto(list.getTrelloIdList(),
+                                               list.getName(),
+                                               cardMapper.mapToDto(list.getCards())))
+                .collect(Collectors.toList());
   }
 }

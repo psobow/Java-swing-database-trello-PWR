@@ -12,15 +12,19 @@ public class BoardMapper {
   @Autowired
   ListMapper listMapper;
 
-  public TrelloBoard mapToTrelloBoard(final TrelloBoardDto boardDto){
-    return new TrelloBoard(boardDto.getId(),
-                           boardDto.getName(),
-                           listMapper.mapToListTrelloList(boardDto.getLists()));
+  public List<TrelloBoard> mapToDomain(final List<TrelloBoardDto> boardDtos){
+    return boardDtos.stream()
+                    .map(boardDto -> new TrelloBoard(boardDto.getTrelloId(),
+                                                     boardDto.getName(),
+                                                     listMapper.mapToDomain(boardDto.getLists())))
+                    .collect(Collectors.toList());
   }
 
-  public List<TrelloBoard> mapToListTrelloBoard(final List<TrelloBoardDto> boardDtos){
-    return boardDtos.stream()
-                    .map(boardDto -> mapToTrelloBoard(boardDto))
-                    .collect(Collectors.toList());
+  public List<TrelloBoardDto> mapToDto(final List<TrelloBoard> boards){
+    return boards.stream()
+                 .map(board -> new TrelloBoardDto(board.getTrelloIdBoard(),
+                                                  board.getName(),
+                                                  listMapper.mapToDto(board.getLists())))
+                 .collect(Collectors.toList());
   }
 }

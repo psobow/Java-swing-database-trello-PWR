@@ -2,6 +2,7 @@
 package com.pwr.demo.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,14 +17,17 @@ import java.util.stream.Collectors;
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TrelloListDto {
-  private String id;
+  @JsonProperty("id")
+  private String trelloId;
+  @JsonProperty("name")
   private String name;
+  @JsonProperty("cards")
   private List<TrelloCardDto> cards;
 
   @Override
   public String toString(){
-    return "List name: " + name + ", List ID: " + id + "\n"
-        + "                Cards inside:\n" + getEveryCardToString();
+    return "List name: " + name + ", List ID: " + trelloId + "\n"
+           + "                Cards inside:\n" + getEveryCardToString();
   }
 
   public void setName(String name) {

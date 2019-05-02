@@ -23,7 +23,7 @@ public class TrelloClient {
 
   public void putTrelloBoardName(final TrelloBoardDto boardDto, final String newName){
     URI url = UriComponentsBuilder
-        .fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/boards/" + boardDto.getId())
+        .fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/boards/" + boardDto.getTrelloId())
         .queryParam("key",     trelloConfig.getTrelloAppKey())//MainFrame.trelloKeyText.getText())
         .queryParam("token",   trelloConfig.getTrelloToken())//MainFrame.trelloTokenText.getText())
         .queryParam("name", newName)
@@ -40,7 +40,7 @@ public class TrelloClient {
 
   public void putTrelloListName(final TrelloListDto listDto, final String newName){
     URI url = UriComponentsBuilder
-        .fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/lists/" + listDto.getId())
+        .fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/lists/" + listDto.getTrelloId())
         .queryParam("key",     trelloConfig.getTrelloAppKey())//MainFrame.trelloKeyText.getText())
         .queryParam("token",   trelloConfig.getTrelloToken())//MainFrame.trelloTokenText.getText())
         .queryParam("name", newName)
@@ -57,7 +57,7 @@ public class TrelloClient {
 
   public void putTrelloCardName(final TrelloCardDto cardDto, final String newName){
     URI url = UriComponentsBuilder
-        .fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/cards/" + cardDto.getId())
+        .fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/cards/" + cardDto.getTrelloId())
         .queryParam("key",     trelloConfig.getTrelloAppKey())//MainFrame.trelloKeyText.getText())
         .queryParam("token",   trelloConfig.getTrelloToken())//MainFrame.trelloTokenText.getText())
         .queryParam("name", newName)
@@ -89,7 +89,7 @@ public class TrelloClient {
                             .orElse(new TrelloBoardDto[0]))
             .forEach(board -> Optional.ofNullable(board.getLists())
                                       .orElse(new ArrayList<>())
-                                      .forEach(list -> list.setCards(getTrelloCardsInsideList(list.getId())))
+                                      .forEach(list -> list.setCards(getTrelloCardsInsideList(list.getTrelloId())))
             );
 
 
