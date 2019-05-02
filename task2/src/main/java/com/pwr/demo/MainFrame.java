@@ -107,8 +107,7 @@ public class MainFrame extends JFrame {
     for (int boardIndex = 0; boardIndex < trelloBoardDtos.size(); boardIndex++){
 
       if (boardIdText.get(boardIndex).getText().length() == 0) {
-        boardIdText.get(boardIndex)
-                   .setText(trelloBoardDtos.get(boardIndex).getTrelloId());
+        boardIdText.get(boardIndex).setText(trelloBoardDtos.get(boardIndex).getTrelloId());
       }
         boardNameText.get(boardIndex).setText(trelloBoardDtos.get(boardIndex).getName());
 
@@ -135,6 +134,24 @@ public class MainFrame extends JFrame {
 
 
   private void generateGUI(List<TrelloBoardDto> trelloBoardDtos){
+
+    for (JLabel label : boardNameLabels) panel.remove(label);
+    for (JLabel label : boardIdLabels) panel.remove(label);
+
+    for (JLabel label : listNameLabels) panel.remove(label);
+    for (JLabel label : listIdLabels) panel.remove(label);
+
+    for (JLabel label : cardNameLabels) panel.remove(label);
+
+    for (JTextField textField : boardNameText) panel.remove(textField);
+    for (JTextField textField : boardIdText) panel.remove(textField);
+
+    for (JTextField textField : listNameText) panel.remove(textField);
+    for (JTextField textField : listIdText) panel.remove(textField);
+
+    for (JTextField textField : cardNameText) panel.remove(textField);
+
+
 
     boardNameLabels = new ArrayList<>();
     boardIdLabels = new ArrayList<>();
@@ -380,8 +397,13 @@ public class MainFrame extends JFrame {
     });
 
     buttonFetchFromDB.addActionListener(event -> {
-      if(dBservice.findAll().size() != 0){
-        fillGUIComponents(boardMapper.mapToDto(dBservice.findAll()));
+      trelloBoards = boardMapper.mapToDto(dBservice.findAll());
+      if(trelloBoards.size() != 0){
+        generateGUI(trelloBoards);
+        fillGUIComponents(trelloBoards);
+
+        panel.revalidate();
+        panel.repaint();
       }
     });
     setVisible(true);
