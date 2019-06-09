@@ -1,5 +1,6 @@
 package com.pwr.demo.client;
 
+import com.pwr.demo.MainFrame;
 import com.pwr.demo.config.TrelloConfig;
 import com.pwr.demo.dto.TrelloBoardDto;
 import com.pwr.demo.dto.TrelloCardDto;
@@ -24,8 +25,8 @@ public class TrelloClient {
   public void putTrelloBoardName(final TrelloBoardDto boardDto, final String newName){
     URI url = UriComponentsBuilder
         .fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/boards/" + boardDto.getTrelloId())
-        .queryParam("key",     trelloConfig.getTrelloAppKey())//MainFrame.trelloKeyText.getText())
-        .queryParam("token",   trelloConfig.getTrelloToken())//MainFrame.trelloTokenText.getText())
+        .queryParam("key", MainFrame.trelloKeyText.getText())
+        .queryParam("token",   MainFrame.trelloTokenText.getText())
         .queryParam("name", newName)
         .build().encode().toUri();
 
@@ -41,8 +42,8 @@ public class TrelloClient {
   public void putTrelloListName(final TrelloListDto listDto, final String newName){
     URI url = UriComponentsBuilder
         .fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/lists/" + listDto.getTrelloId())
-        .queryParam("key",     trelloConfig.getTrelloAppKey())//MainFrame.trelloKeyText.getText())
-        .queryParam("token",   trelloConfig.getTrelloToken())//MainFrame.trelloTokenText.getText())
+        .queryParam("key",     MainFrame.trelloKeyText.getText())
+        .queryParam("token",   MainFrame.trelloTokenText.getText())
         .queryParam("name", newName)
         .build().encode().toUri();
 
@@ -58,8 +59,8 @@ public class TrelloClient {
   public void putTrelloCardName(final TrelloCardDto cardDto, final String newName){
     URI url = UriComponentsBuilder
         .fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/cards/" + cardDto.getTrelloId())
-        .queryParam("key",     trelloConfig.getTrelloAppKey())//MainFrame.trelloKeyText.getText())
-        .queryParam("token",   trelloConfig.getTrelloToken())//MainFrame.trelloTokenText.getText())
+        .queryParam("key",     MainFrame.trelloKeyText.getText())
+        .queryParam("token",   MainFrame.trelloTokenText.getText())
         .queryParam("name", newName)
         .build().encode().toUri();
 
@@ -76,8 +77,8 @@ public class TrelloClient {
   public List<TrelloBoardDto> getTrelloBoardsWithListsAndCards() {
     URI url = UriComponentsBuilder
         .fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/members/" + trelloConfig.getTrelloLogin() + "/boards")
-        .queryParam("key",     trelloConfig.getTrelloAppKey())//MainFrame.trelloKeyText.getText())
-        .queryParam("token",   trelloConfig.getTrelloToken())//MainFrame.trelloTokenText.getText())
+        .queryParam("key",     MainFrame.trelloKeyText.getText())
+        .queryParam("token",   MainFrame.trelloTokenText.getText())
         .queryParam("fields", "name,id")
         .queryParam("lists",  "all")
         .build().encode().toUri();
@@ -104,8 +105,8 @@ public class TrelloClient {
   List<TrelloCardDto> getTrelloCardsInsideList(final String listId){
     URI url = UriComponentsBuilder
         .fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/lists/" + listId + "/cards")
-        .queryParam("key", trelloConfig.getTrelloAppKey())//MainFrame.trelloKeyText.getText())
-        .queryParam("token", trelloConfig.getTrelloToken())//MainFrame.trelloTokenText.getText())
+        .queryParam("key", MainFrame.trelloKeyText.getText())
+        .queryParam("token", MainFrame.trelloTokenText.getText())
         .queryParam("fields", "name,id,idList")
         .build().encode().toUri();
 
